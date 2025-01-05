@@ -1,0 +1,49 @@
+version: "3.7"
+services:
+  backend:
+    image: "noteapp_backend"
+    container_name: "noteapp_backend-1"
+    build: .
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - springapimysql-net
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://note_sql:3306/NOTE
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: 828186
+    depends_on:
+      - note_sql
+
+  flutter_frontend:
+    image: "noteapp_frontend"
+    container_name: "noteapp_frontend-1"
+    build:
+      context: C:\Users\gokul\Downloads\note_app  
+      dockerfile: Dockerfile 
+    restart: always
+    ports:
+      - "80:80"
+    networks:
+      - springapimysql-net
+    depends_on:
+      - backend    
+
+  note_sql:
+    image: mysql:8.0
+    container_name: "note_sql"
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 828186
+      MYSQL_DATABASE: NOTE
+    networks:
+      - springapimysql-net
+
+  
+    
+
+networks:
+  springapimysql-net:
